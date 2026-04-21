@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    container_name: task_app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/taskdb
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data:

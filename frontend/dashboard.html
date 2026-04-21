@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TenantFlow — Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-body">
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-name">TenantFlow</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" onclick="showSection('tasks', this)">
+      <span class="nav-icon">▦</span> Dashboard
+    </a>
+    <a href="#" class="nav-item" onclick="showSection('mytasks', this)">
+      <span class="nav-icon">✓</span> Tasks
+    </a>
+    <a href="#" class="nav-item" onclick="showSection('presence', this)">
+      <span class="nav-icon">👥</span> Team Presence
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="avatar" id="avatarInitial">?</div>
+      <div>
+        <div class="user-name" id="sidebarName">Loading...</div>
+        <div class="user-role" id="sidebarRole">—</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</aside>
+
+<main class="main">
+
+  <!-- ── Dashboard Section ── -->
+  <div id="sectionTasks">
+    <header class="topbar">
+      <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-sub">Welcome back, <span id="topbarName">...</span></p>
+      </div>
+      <button class="btn-primary" onclick="openModal()">+ New Task</button>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value pending" id="statPending">0</div></div>
+      <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value inprogress" id="statInProgress">0</div></div>
+      <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value completed" id="statCompleted">0</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" onclick="filterTasks('all', this)">All</button>
+      <button class="filter-btn" onclick="filterTasks('pending', this)">Pending</button>
+      <button class="filter-btn" onclick="filterTasks('in-progress', this)">In Progress</button>
+      <button class="filter-btn" onclick="filterTasks('completed', this)">Completed</button>
+    </div>
+
+    <div id="taskList" class="task-grid">
+      <div class="empty-state">No tasks yet. Create your first task!</div>
+    </div>
+  </div>
+
+  <!-- ── Tasks Section ── -->
+  <div id="sectionMytasks" style="display:none">
+    <header class="topbar">
+      <div>
+        <h1 class="page-title">Tasks</h1>
+        <p class="page-sub">All tasks in your company</p>
+      </div>
+      <button class="btn-primary" onclick="openModal()">+ New Task</button>
+    </header>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" onclick="filterTasks('all', this)">All</button>
+      <button class="filter-btn" onclick="filterTasks('pending', this)">Pending</button>
+      <button class="filter-btn" onclick="filterTasks('in-progress', this)">In Progress</button>
+      <button class="filter-btn" onclick="filterTasks('completed', this)">Completed</button>
+    </div>
+
+    <div id="taskListAlt" class="task-grid">
+      <div class="empty-state">No tasks yet.</div>
+    </div>
+  </div>
+
+  <!-- ── Team Presence Section ── -->
+  <div id="sectionPresence" style="display:none">
+    <header class="topbar">
+      <div>
+        <h1 class="page-title">My Tasks</h1>
+        <p class="page-sub">Team online / offline status</p>
+      </div>
+      <button class="btn-secondary" onclick="loadUserStatus()">↻ Refresh</button>
+    </header>
+
+    <div id="presenceList" class="presence-list presence-list-full">
+      <p class="empty-state">Loading...</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- Task Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">New Task</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <form onsubmit="submitTask(event)">
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="taskTitle" placeholder="Task title" required />
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="taskDesc" placeholder="Describe the task..." rows="3"></textarea>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="taskStatus">
+          <option value="pending">Pending</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Priority</label>
+        <select id="taskPriority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+      <input type="hidden" id="editTaskId" />
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-primary" id="modalSubmitBtn">Create Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="tasks.js"></script>
+</body>
+</html>
